@@ -1,0 +1,58 @@
+{
+	"info": {
+		"_postman_id": "42e69526-c6bd-451d-859f-00e91eab98cc",
+		"name": "postman demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SignIn",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const responseData = pm.response.json();",
+							"",
+							"pm.test(\"Sign in Should be successful\", function () {",
+							"    pm.expect(responseData.err).to.eql(0)",
+							"    pm.expect(responseData.msg).to.eql(\"Sign Up is successful. Please verify the account in emailID\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "        {\n            \"userName\":\"manju1@gmail.com\",\n            \"password\":\"Password@01\",\n            \"firstName\":\"Manjunath\",\n            \"lastName\":\"Rajashekaraiah\",\n            \"phoneNumber\":\"1234567890\",\n            \"dateOfBirth\":\"02-10-1982\"\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/authentication/saveSignInDetails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"authentication",
+						"saveSignInDetails"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
