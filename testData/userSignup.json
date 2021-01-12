@@ -1,0 +1,18 @@
+[
+   {
+      "userName":"manju1@gmail.com",
+      "password":"Password@01",
+      "firstName":"Manjunath",
+      "lastName":"Rajashekaraiah",
+      "phoneNumber":"1234567890",
+      "dateOfBirth":"02-10-1982"
+   },
+   {
+      "userName":"vishwa1@gmail.com",
+      "password":"Password@01",
+      "firstName":"Vishwanath",
+      "lastName":"Meyyappan",
+      "phoneNumber":"1234567890",
+      "dateOfBirth":"02-10-1982"
+   }
+]

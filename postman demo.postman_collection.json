@@ -19,8 +19,8 @@
 							"const responseData = pm.response.json();",
 							"",
 							"pm.test(\"Sign in Should be successful\", function () {",
-							"    pm.expect(responseData.err).to.eql(0)",
 							"    pm.expect(responseData.msg).to.eql(\"Sign Up is successful. Please verify the account in emailID\");",
+							"    pm.expect(responseData.err).to.eql(0)",
 							"});"
 						],
 						"type": "text/javascript"
@@ -32,7 +32,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "        {\n            \"userName\":\"manju1@gmail.com\",\n            \"password\":\"Password@01\",\n            \"firstName\":\"Manjunath\",\n            \"lastName\":\"Rajashekaraiah\",\n            \"phoneNumber\":\"1234567890\",\n            \"dateOfBirth\":\"02-10-1982\"\n        }",
+					"raw": "        {\n            \"userName\":\"{{userName}}\",\n            \"password\":\"{{password}}\",\n            \"firstName\":\"{{firstName}}\",\n            \"lastName\":\"{{lastName}}\",\n            \"phoneNumber\":\"{{phoneNumber}}\",\n            \"dateOfBirth\":\"{{dateOfBirth}}\"\n        }",
 					"options": {
 						"raw": {
 							"language": "json"
