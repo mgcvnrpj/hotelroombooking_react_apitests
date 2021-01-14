@@ -1,0 +1,66 @@
+[
+   {
+      "signup":{
+         "userName":"manju1@gmail.com",
+         "password":"Password@01",
+         "firstName":"Manjunath",
+         "lastName":"Rajashekaraiah",
+         "phoneNumber":"1234567890",
+         "dateOfBirth":"02-10-1982"
+      },
+      "reigstration":{
+         "firstName":"Vishawanath",
+         "lastName":"Meyyappan",
+         "phoneNumber":1234567890,
+         "street":"5th Main",
+         "area":"CS Block",
+         "city":"Bangalore",
+         "postCode":"560098",
+         "country":"India",
+         "idProof":"AI456SFDF",
+         "arrivalDate":"16-10-2020",
+         "departureDate":"18-10-2020",
+         "noOfPeople":"2",
+         "roomType":"Deluxe",
+         "beds":"single",
+         "totalPrice":"1000",
+         "basePrice":"900",
+         "GST":"100",
+         "reservationFee":"50",
+         "paymentGateWayFee":"50",
+         "otherDescription":"test"
+      }
+   },
+   {
+      "signup":{
+         "userName":"manju2@gmail.com",
+         "password":"Password@02",
+         "firstName":"Manjunath",
+         "lastName":"Rajashekaraiah",
+         "phoneNumber":"1234567890",
+         "dateOfBirth":"02-10-1982"
+      },
+      "reigstration":{
+         "firstName":"Vishawanath",
+         "lastName":"Meyyappan",
+         "phoneNumber":1234567890,
+         "street":"5th Main",
+         "area":"CS Block",
+         "city":"Bangalore",
+         "postCode":"560098",
+         "country":"India",
+         "idProof":"AI456SFDF",
+         "arrivalDate":"16-10-2020",
+         "departureDate":"18-10-2020",
+         "noOfPeople":"2",
+         "roomType":"Standard",
+         "beds":"single",
+         "totalPrice":"1000",
+         "basePrice":"900",
+         "GST":"100",
+         "reservationFee":"50",
+         "paymentGateWayFee":"50",
+         "otherDescription":"test"
+      }
+   }
+]

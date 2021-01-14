@@ -13,14 +13,163 @@
 					"script": {
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
+							"    ",
+							"    //Check if the response is successful",
 							"    pm.response.to.have.status(200);",
+							"",
+							"    //Check if the Sign in successful",
+							"    pm.test(\"Sign in Should be successful\", function () {",
+							"        const responseData = pm.response.json();",
+							"        try{",
+							"            pm.expect(responseData.msg).to.eql(\"Sign Up is successful. Please verify the account in emailID\");",
+							"            pm.environment.set(\"userToken\",responseData.userDetails.token); //Set Environment Variable for next request",
+							"            postman.setNextRequest(\"VerifyUser\"); //Execute next request",
+							"        }catch(err){",
+							"            postman.setNextRequest(null);   //Stop the collection execution as there is error",
+							"            throw err;",
+							"        }",
+							"    });    ",
 							"});",
 							"",
-							"const responseData = pm.response.json();",
+							"//postman.setNextRequest(null);",
 							"",
-							"pm.test(\"Sign in Should be successful\", function () {",
-							"    pm.expect(responseData.msg).to.eql(\"Sign Up is successful. Please verify the account in emailID\");",
-							"    pm.expect(responseData.err).to.eql(0)",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.clear();",
+							"",
+							"//Get the value from data sheet from the object signup",
+							"let signUpData = pm.iterationData.get(\"signup\");",
+							"",
+							"//Read the key value pair of the object and create environment variable",
+							"for(const [key,value] of Object.entries(signUpData)){",
+							"    pm.environment.set(key, value);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{userName}}\",\n    \"password\": \"{{password}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"phoneNumber\": \"{{phoneNumber}}\",\n    \"dateOfBirth\": \"{{dateOfBirth}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/authentication/saveSignInDetails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"authentication",
+						"saveSignInDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VerifyUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let receivedOKResponse = false",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    receivedOKResponse = true;",
+							"});",
+							"",
+							"if(receivedOKResponse){",
+							"    pm.test(\"User Verification\", function () {",
+							"        pm.response.to.have.body(\"Your account has been successfully verified\");",
+							"        postman.setNextRequest(\"LoginUser\");",
+							"    });",
+							"}else{",
+							"    postman.setNextRequest(null);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/authentication/verifyAccount/:email/:token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"authentication",
+						"verifyAccount",
+						":email",
+						":token"
+					],
+					"variable": [
+						{
+							"key": "email",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "token",
+							"value": "{{userToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    ",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    pm.test(\"Login Should be successful\", function () {",
+							"        var jsonData = pm.response.json();",
+							"        pm.expect(jsonData.uid.userName).to.eql(pm.environment.get(\"userName\"));",
+							"        postman.setNextRequest(\"NewRegistration\");",
+							"    });",
 							"});"
 						],
 						"type": "text/javascript"
@@ -32,7 +181,204 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "        {\n            \"userName\":\"{{userName}}\",\n            \"password\":\"{{password}}\",\n            \"firstName\":\"{{firstName}}\",\n            \"lastName\":\"{{lastName}}\",\n            \"phoneNumber\":\"{{phoneNumber}}\",\n            \"dateOfBirth\":\"{{dateOfBirth}}\"\n        }",
+					"raw": "{\n    \"userName\": \"{{userName}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/authentication/loginDetails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"authentication",
+						"loginDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "NewRegistration",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//Generate random number for booking reference id",
+							"pm.environment.set(\"bookingRefID\", Date.now().toString(36) + Math.random().toString(36).substr(2));",
+							"",
+							"//Get the value from data sheet from the object registration",
+							"let registrationData = pm.iterationData.get(\"reigstration\");",
+							"",
+							"//Read the key value pair of the object and create environment variable",
+							"for(const [key,value] of Object.entries(registrationData)){",
+							"    pm.environment.set(key, value);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    ",
+							"    pm.response.to.have.status(200);",
+							"    ",
+							"    pm.test(\"Book a Room\", function () {",
+							"        var jsonData = pm.response.json();",
+							"        pm.expect(jsonData.msg).to.eql(\"Registration is successful\");",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bookingRefID\": \"{{bookingRefID}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"phoneNumber\": {{phoneNumber}},\n    \"street\": \"{{street}}\",\n    \"area\": \"{{area}}\",\n    \"city\": \"{{city}}\",\n    \"postCode\": \"{{postCode}}\",\n    \"country\": \"{{country}}\",\n    \"idProof\": \"{{idProof}}\",\n    \"arrivalDate\": \"{{arrivalDate}}\",\n    \"departureDate\": \"{{departureDate}}\",\n    \"noOfPeople\": \"{{noOfPeople}}\",\n    \"roomType\": \"{{roomType}}\",\n    \"beds\": \"{{beds}}\",\n    \"totalPrice\": \"{{totalPrice}}\",\n    \"basePrice\": \"{{basePrice}}\",\n    \"GST\": \"{{GST}}\",\n    \"reservationFee\": \"{{reservationFee}}\",\n    \"paymentGateWayFee\": \"{{paymentGateWayFee}}\",\n    \"otherDescription\": \"{{otherDescription}}\",\n    \"bookingUser\": \"{{userName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/hotelRegistration/newRegistration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"hotelRegistration",
+						"newRegistration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetchRegistrations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    ",
+							"    pm.response.to.have.status(200);",
+							"    ",
+							"    pm.test(\"Fetch all the registrations\", function () {",
+							"        var jsonData = pm.response.json();",
+							"        //pm.expect(jsonData.msg).to.eql(\"Registration is successful\");",
+							"        //console.log(jsonData.data.length)",
+							"        pm.expect(jsonData.data.length).to.equal(1);",
+							"    });",
+							"});",
+							"",
+							"pm.environment.clear();",
+							"postman.setNextRequest(null);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bookingUser\":\"{{userName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/hotelRegistration/fetchRegistrations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"hotelRegistration",
+						"fetchRegistrations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SignIn_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    ",
+							"    //Check if the response is successful",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    //Check if the Sign in successful",
+							"    pm.test(\"Sign in Should be successful\", function () {",
+							"        const responseData = pm.response.json();",
+							"        try{",
+							"            pm.expect(responseData.msg).to.eql(\"Sign Up is successful. Please verify the account in emailID\");",
+							"            ",
+							"            let emailId=responseData.userDetails.userName;",
+							"            let token=responseData.userDetails.token;",
+							"",
+							"            const URL = `http://localhost:9000/authentication/verifyAccount/${emailId}/${token}`",
+							"            ",
+							"            pm.sendRequest(URL, (error, response) => {",
+							"                if(error) {",
+							"                    throw error;",
+							"                }else{",
+							"                    pm.test(\"Status code is 200\", function () {",
+							"                        pm.response.to.have.status(200);",
+							"",
+							"                        pm.test(\"User Verification\", function () {",
+							"                            pm.expect(response).to.have.body(\"Your account has been successfully verified\");",
+							"                        })",
+							"                        ",
+							"                    });",
+							"                }",
+							"            })",
+							"        }catch(err){",
+							"            postman.setNextRequest(null);   //Stop the collection execution as there is error",
+							"            throw err;",
+							"        }",
+							"    });    ",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "   {\n      \"userName\":\"manju1@gmail.com\",\n      \"password\":\"Password@01\",\n      \"firstName\":\"Manjunath\",\n      \"lastName\":\"Rajashekaraiah\",\n      \"phoneNumber\":\"1234567890\",\n      \"dateOfBirth\":\"02-10-1982\"\n   }",
 					"options": {
 						"raw": {
 							"language": "json"
